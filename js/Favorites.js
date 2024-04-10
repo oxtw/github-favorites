@@ -23,9 +23,20 @@ export class Favorites {
                 followers: '120000'
             }
         ]
-        this.entries = entries
+       
     }
 
+    delete(user){
+        //Higher-order-functions(map, filter, find, reduce)
+        // this.entries.length =1
+        
+        // console.log(this.entries)
+
+        const filteredEntries = this.entries
+        .filter(entry => entry.login !== user.login)
+        
+        console.log(filteredEntries)
+    }
 
 }
 //classe que vai criar a visualização e eventos do HTML
@@ -44,11 +55,19 @@ export class FavoritesView extends Favorites {
 
             const row = this.createRow()
             row.querySelector('.user img').src = `https://github.com/${user.login}.png`
-            row.querySelector('user img').alt= `Imagem de ${user.name}`
+            row.querySelector('.user img').alt = `Imagem de ${user.name}`
             row.querySelector('.user p').textContent = user.name
             row.querySelector('.user span').textContent = user.login
             row.querySelector('.repositories').textContent = user.public_repos
             row.querySelector('.followers').textContent = user.followers
+
+            row.querySelector('.remove').onclick = () => {
+               const isOk= confirm('Tem certeza que deseja deletar essa linha?')
+
+               if(isOk){
+                this.delete(user)
+               }
+            }
 
             this.tbody.append(row)
         })
@@ -56,7 +75,7 @@ export class FavoritesView extends Favorites {
 
         createRow(){
 
-            document.createElement('tr')
+           const tr = document.createElement('tr')
 
             tr.innerHTML = `
         <tr>
