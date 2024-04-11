@@ -34,8 +34,26 @@ export class Favorites {
     }
 
      async add(username) {
+        try{
+
         const user = await GitHubUser.search(username)
         console.log(user)
+        if(user.login === undefined){
+            throw new Error('Usuário não encotrado')
+        }
+
+        this.entries = [user, ...this.entries]
+        this.update()
+        this.save()
+        
+
+        }catch(error){
+            alert(error.message)
+        }
+    }
+
+    save(){
+        localStorage.setItem('@github-favorites:', JSON.stringify(this.entries))
     }
 
     delete(user) {
@@ -49,6 +67,7 @@ export class Favorites {
         
         this.entries = filteredEntries
         this.update()
+        this.save()
     }
 
 }
