@@ -26,14 +26,19 @@ export class Favorites {
         this.load()
         this.tbody = this.root.querySelector('table tbody')
 
-        GitHubUser.search('oxtw').then(user => console.log(user))
+        // GitHubUser.search('oxtw').then(user => console.log(user))
     }
 
     load() {
-        const entries = JSON.parse(localStorage.getItem('@github-favorites:')) || []
+        this.entries = JSON.parse(localStorage.getItem('@github-favorites:')) || []
     }
 
-    delete(user){
+     async add(username) {
+        const user = await GitHubUser.search(username)
+        console.log(user)
+    }
+
+    delete(user) {
         //Higher-order-functions(map, filter, find, reduce)
         // this.entries.length =1
         
@@ -54,14 +59,24 @@ export class FavoritesView extends Favorites {
         super(root)
 
         this.update()
+        this.onadd()
+    }
+
+    onadd(){
+        const addButton = this.root.querySelector('.search button')
+        addButton.onclick = () => {
+            const { value } = this.root.querySelector('.search input')
+
+            this.add(value)
+        }
     }
 
     update() {
         this.removeAllTr()
 
-        this.entries.forEach(user => {
-
+        this.entries.forEach( user => {
             const row = this.createRow()
+
             row.querySelector('.user img').src = `https://github.com/${user.login}.png`
             row.querySelector('.user img').alt = `Imagem de ${user.name}`
             row.querySelector('.user p').textContent = user.name
